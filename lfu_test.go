@@ -34,8 +34,13 @@ func TestCache(t *testing.T) {
 
 	_, _ = c.Get(2)
 	_, _ = c.Get(2)
+	_, _ = c.Get(2)
 	v, b = c.GetLFU()
 	check(t, 1, true, v, b)
+
+	c.Set(3, "three")
+	v, b = c.GetLFU()
+	check(t, 3, true, v, b)
 }
 
 func check(t *testing.T, expV any, expB bool, gotV any, gotB bool) {
