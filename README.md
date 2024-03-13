@@ -1,6 +1,6 @@
 # Least Frequently Used Cache
 
-A Go library to handle a LFU cache with all the three operations in O(1):
+A Go library for handling LFU cache operations in O(1):
 
 * Get
 * Insert
