@@ -1,7 +1,9 @@
 package lfu_test
 
 import (
+	"math/rand"
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -59,4 +61,27 @@ func TestCache(t *testing.T) {
 func check(t *testing.T, expV any, expB bool, gotV any, gotB bool) {
 	require.Equal(t, expB, gotB)
 	assert.Equal(t, expV, gotV)
+}
+
+func TestRace(t *testing.T) {
+	n := 1_000_000
+	rand.Seed(time.Now().UnixNano())
+
+	c := lfu.NewCache[int, int](100)
+	go func() {
+		for i := 0; i < n; i++ {
+			c.Get(rand.Intn(200))
+		}
+	}()
+	go func() {
+		for i := 0; i < n; i++ {
+			c.GetLFU()
+		}
+	}()
+	go func() {
+		for i := 0; i < n; i++ {
+			v := rand.Intn(200)
+			c.Set(v, v)
+		}
+	}()
 }

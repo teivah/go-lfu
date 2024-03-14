@@ -100,7 +100,7 @@ func (c *Cache[K, V]) Set(k K, v V) {
 // GetLFU gets the least frequently used key.
 func (c *Cache[K, _]) GetLFU() (K, bool) {
 	c.mu.RLock()
-	c.mu.RUnlock()
+	defer c.mu.RUnlock()
 
 	var zero K
 	if len(c.byKey) == 0 {
