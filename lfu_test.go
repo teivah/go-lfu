@@ -12,7 +12,7 @@ func TestCache(t *testing.T) {
 	var v any
 	var b bool
 
-	c := lfu.NewCache[int, string]()
+	c := lfu.NewCache[int, string](2)
 
 	_, b = c.GetLFU()
 	require.Equal(t, false, b)
@@ -41,6 +41,19 @@ func TestCache(t *testing.T) {
 	c.Set(3, "three")
 	v, b = c.GetLFU()
 	check(t, 3, true, v, b)
+	v, b = c.Get(1)
+	check(t, "", false, v, b)
+
+	c.Set(4, "four")
+	v, b = c.GetLFU()
+	check(t, 4, true, v, b)
+	v, b = c.Get(3)
+	check(t, "", false, v, b)
+
+	_, _ = c.Get(4)
+	_, _ = c.Get(4)
+	_, _ = c.Get(4)
+	c.Set(5, "five")
 }
 
 func check(t *testing.T, expV any, expB bool, gotV any, gotB bool) {
