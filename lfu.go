@@ -78,7 +78,8 @@ func (c *Cache[K, V]) Set(k K, v V) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
-	if _, exists := c.byKey[k]; exists {
+	if freq, exists := c.byKey[k]; exists {
+		freq.data = v
 		return
 	}
 

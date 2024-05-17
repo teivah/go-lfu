@@ -25,9 +25,13 @@ func TestCache(t *testing.T) {
 	c.Set(1, "one")
 	v, b = c.GetLFU()
 	check(t, 1, true, v, b)
-
 	v, b = c.Get(1)
 	check(t, "one", true, v, b)
+
+	// Update the same value
+	c.Set(1, "onex")
+	v, b = c.Get(1)
+	check(t, "onex", true, v, b)
 
 	c.Set(2, "two")
 	_, _ = c.Get(1)
